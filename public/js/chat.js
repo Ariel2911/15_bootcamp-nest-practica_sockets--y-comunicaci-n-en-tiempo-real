@@ -40,3 +40,16 @@ form.addEventListener('submit', (e) => {
 
   socket.emit('send-message', message);
 });
+
+const lblStatusOnline = document.querySelector('#status-online');
+const lblStatusOffline = document.querySelector('#status-offline');
+
+socket.on('connect', () => {
+  lblStatusOnline.classList.remove('hidden');
+  lblStatusOffline.classList.add('hidden');
+});
+
+socket.on('disconnect', () => {
+  lblStatusOffline.classList.remove('hidden');
+  lblStatusOnline.classList.add('hidden');
+});
