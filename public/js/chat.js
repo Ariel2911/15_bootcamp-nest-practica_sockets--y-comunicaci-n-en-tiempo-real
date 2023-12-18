@@ -3,11 +3,12 @@ if (!username) {
   window.location.replace('/');
   throw new Error('Username is required');
 }
-const socket = io();
+const socket = io({ auth: { name: username } });
 
 const form = document.querySelector('form');
 const input = document.querySelector('input');
 const chatElement = document.querySelector('#chat');
+const userUlElement = document.querySelector('#userList');
 
 const renderMessage = (payload) => {
   const { userId, message } = payload;
@@ -28,6 +29,15 @@ const renderMessage = (payload) => {
 
   //Agregar el div al chat
   chatElement.appendChild(divElement);
+};
+
+const renderUser = (users) => {
+  userUlElement.innerHTML = '';
+  users.forEach((user) => {
+    const liElement = document.createElement('li');
+    liElement.innerText = user.name;
+    userUlElement.appendChild(liElement);
+  });
 };
 
 socket.on('on-message', renderMessage);
@@ -53,3 +63,5 @@ socket.on('disconnect', () => {
   lblStatusOffline.classList.remove('hidden');
   lblStatusOnline.classList.add('hidden');
 });
+
+socket.on('on-client-changed', renderUser);

@@ -18,9 +18,16 @@ export class ChatGateway implements OnModuleInit {
 
   onModuleInit() {
     this.server.on('connection', (socket: Socket) => {
-      console.log('New client connected');
+      const { name } = socket.handshake.auth;
+      console.log('New client connected', name);
+
+      this.chatService.onClientConnected({ id: socket.id, name });
+
+      this.server.emit('on-client-changed', this.chatService.getClient());
 
       socket.on('disconnect', () => {
+        this.chatService.onClientDisconnected(socket.id);
+        this.server.emit('on-client-changed', this.chatService.getClient());
         console.log('Cliente desconectado');
       });
     });
