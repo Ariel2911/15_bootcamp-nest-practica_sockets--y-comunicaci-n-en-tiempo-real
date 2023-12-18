@@ -38,8 +38,10 @@ export class ChatGateway implements OnModuleInit {
     @MessageBody() message: string,
     @ConnectedSocket() client: Socket,
   ) {
+    const { name } = client.handshake.auth;
+
     if (!message) return;
 
-    this.server.emit('on-message', { userId: client.id, message });
+    this.server.emit('on-message', { userId: client.id, name, message });
   }
 }

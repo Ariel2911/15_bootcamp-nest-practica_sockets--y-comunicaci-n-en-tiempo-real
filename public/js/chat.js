@@ -11,7 +11,7 @@ const chatElement = document.querySelector('#chat');
 const userUlElement = document.querySelector('#userList');
 
 const renderMessage = (payload) => {
-  const { userId, message } = payload;
+  const { userId, name, message } = payload;
 
   //Crear un div element
   const divElement = document.createElement('div');
@@ -21,14 +21,20 @@ const renderMessage = (payload) => {
 
   //Si el id no es el mio, agregar "incognit"
   if (userId !== socket.id) {
-    divElement.classList.add('incognit');
+    divElement.classList.add('incoming');
   }
 
-  //Agregar el mensaje al div
-  divElement.innerHTML = message;
+  //Agregar el name y el mensaje al div
+  divElement.innerHTML = `
+    <smal>${name}</smal>
+    <p>${message}</p>
+  `;
 
   //Agregar el div al chat
   chatElement.appendChild(divElement);
+
+  //Scroll al final de los mensajes
+  chatElement.scrollTop = chatElement.scrollHeight;
 };
 
 const renderUser = (users) => {
